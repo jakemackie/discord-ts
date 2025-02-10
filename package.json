@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
+    "register": "node dist/register.js",
     "format": "prettier --write ."
   },
   "keywords": [],

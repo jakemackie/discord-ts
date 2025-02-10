@@ -1,13 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {
-  Client,
-  Collection,
-  Events,
-  GatewayIntentBits,
-  MessageFlags
-} from 'discord.js';
 import dotenv from 'dotenv';
+import { Client, Collection, Events, GatewayIntentBits } from 'discord.js';
 
 dotenv.config();
 
@@ -22,8 +16,10 @@ const client: ExtendedClient = new Client({
   intents: [GatewayIntentBits.Guilds]
 }) as ExtendedClient;
 
+// Initialize the commands collection
 client.commands = new Collection();
 
+// Load commands
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
@@ -32,26 +28,22 @@ for (const folder of commandFolders) {
   const commandFiles = fs
     .readdirSync(commandsPath)
     .filter((file) => file.endsWith('.js'));
+
   for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
-    const command = require(filePath);
-    // Set a new item in the Collection with the key as the command name and the value as the exported module
+    const command = require(filePath).default;
+
     if ('data' in command && 'execute' in command) {
       client.commands.set(command.data.name, command);
-    } else {
-      console.log(
-        `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
-      );
     }
   }
 }
 
+// Handle interactions
 client.on(Events.InteractionCreate, async (interaction) => {
   if (!interaction.isChatInputCommand()) return;
 
-  const command = (interaction.client as ExtendedClient).commands.get(
-    interaction.commandName
-  );
+  const command = client.commands.get(interaction.commandName);
 
   if (!command) {
     console.error(`No command matching ${interaction.commandName} was found.`);
@@ -64,13 +56,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
     console.error(error);
     if (interaction.replied || interaction.deferred) {
       await interaction.followUp({
-        content: 'There was an error while executing this command!',
-        flags: MessageFlags.Ephemeral
+        content: 'There was an error executing this command!',
+        ephemeral: true
       });
     } else {
       await interaction.reply({
-        content: 'There was an error while executing this command!',
-        flags: MessageFlags.Ephemeral
+        content: 'There was an error executing this command!',
+        ephemeral: true
       });
     }
   }
