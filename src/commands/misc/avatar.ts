@@ -15,11 +15,10 @@ export default {
 
     const avatarEmbed = new EmbedBuilder()
       .setAuthor({
-        name: interaction.user.username,
+        name: `**${interaction.user.username}**`,
         iconURL: interaction.user.displayAvatarURL()
       })
       .setDescription(`[${target.username}](${target.displayAvatarURL()})`)
-
       .setImage(
         target.displayAvatarURL({
           size: 1024
