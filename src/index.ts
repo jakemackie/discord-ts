@@ -1,30 +1,23 @@
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import {
-  Client,
-  Collection,
-  Events,
-  GatewayIntentBits,
-  MessageFlags
-} from 'discord.js';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
 
 dotenv.config();
 
 const token: string = process.env.DISCORD_CLIENT_TOKEN;
 
 // Create a new extended client instance
-interface ExtendedClient extends Client {
+export interface ExtendedClient extends Client {
   commands: Collection<string, any>;
 }
 
-const client: ExtendedClient = new Client({
+export const client: ExtendedClient = new Client({
   intents: [GatewayIntentBits.Guilds]
 }) as ExtendedClient;
 
 // Initialize the commands collection
 client.commands = new Collection();
-
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
@@ -46,37 +39,19 @@ for (const folder of commandFolders) {
   }
 }
 
-client.once(Events.ClientReady, (readyClient) => {
-  console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-});
+const eventsPath = path.join(__dirname, 'events');
+const eventFiles = fs
+  .readdirSync(eventsPath)
+  .filter((file) => file.endsWith('.js'));
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
-  const command = (interaction.client as ExtendedClient).commands.get(
-    interaction.commandName
-  );
-
-  if (!command) {
-    console.error(`No command matching ${interaction.commandName} was found.`);
-    return;
+for (const file of eventFiles) {
+  const filePath = path.join(eventsPath, file);
+  const event = require(filePath).default;
+  if (event.once) {
+    client.once(event.name, (...args) => event.execute(...args));
+  } else {
+    client.on(event.name, (...args) => event.execute(...args));
   }
-
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp({
-        content: 'There was an error while executing this command!',
-        flags: MessageFlags.Ephemeral
-      });
-    } else {
-      await interaction.reply({
-        content: 'There was an error while executing this command!',
-        flags: MessageFlags.Ephemeral
-      });
-    }
-  }
-});
+}
 
 client.login(token);

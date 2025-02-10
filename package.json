@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "start": "node dist/index.js",
     "register": "node dist/register.js",
     "format": "prettier --write ."
