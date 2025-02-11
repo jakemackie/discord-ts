@@ -2,6 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import type { CommandInteraction } from 'discord.js';
 
 export default {
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName('server')
     .setDescription('Provides information about the server.'),

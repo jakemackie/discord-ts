@@ -3,6 +3,7 @@ import type { ChatInputCommandInteraction } from 'discord.js';
 import { ExtendedClient } from '../../structures/Client';
 
 export default {
+  category: 'developer',
   data: new SlashCommandBuilder()
     .setName('reload')
     .setDescription('Reloads a command.')

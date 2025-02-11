@@ -2,10 +2,9 @@ import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import type { ChatInputCommandInteraction } from 'discord.js';
 
 export default {
-  category: 'misc',
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName('avatar')
-
     .setDescription('Get the avatar of a user')
     .addUserOption((option) =>
       option.setName('user').setDescription('The user to get the avatar of')

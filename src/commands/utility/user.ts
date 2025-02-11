@@ -3,6 +3,7 @@ import type { CommandInteraction } from 'discord.js';
 import { GuildMember } from 'discord.js';
 
 export default {
+  category: 'utility',
   data: new SlashCommandBuilder()
     .setName('user')
     .setDescription('Provides information about the user.'),
