@@ -30,7 +30,7 @@ export default {
     const url = trackId
       ? getSpotifySongUrl(trackId, listeningToSpotify.party?.id ?? '')
       : null;
-    const artist = listeningToSpotify.state;
+    const artist = listeningToSpotify.state?.replaceAll(';', ', ');
 
     let description = `**${song}**\n-# ${artist}`;
 
