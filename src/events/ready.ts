@@ -1,5 +1,5 @@
 import { Events } from 'discord.js';
-import { ExtendedClient } from '../index';
+import { ExtendedClient } from '../structures/Client';
 
 export default {
   name: Events.ClientReady,
