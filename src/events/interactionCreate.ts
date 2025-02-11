@@ -1,6 +1,15 @@
 import { Events, Interaction, MessageFlags } from 'discord.js';
 import { ExtendedClient } from '../index';
-import { prisma } from '../../lib/prisma';
+import { findOrCreateUser } from '../functions/findOrCreateUser';
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.printf(({ level, message }) => {
+    return `[${new Date().toISOString()}] [${level.toUpperCase()}]: ${message}`;
+  }),
+  transports: [new winston.transports.Console()]
+});
 
 export default {
   name: Events.InteractionCreate,
@@ -19,24 +28,10 @@ export default {
     }
 
     try {
-      let userInDatabase = await prisma.user.findUnique({
-        where: {
-          discordId: interaction.user.id
-        }
-      });
-
-      if (!userInDatabase) {
-        userInDatabase = await prisma.user.create({
-          data: {
-            discordId: interaction.user.id,
-            discordUsername: interaction.user.username,
-            discordDisplayName: interaction.user.displayName
-          }
-        });
-      }
-
-      console.log(userInDatabase);
-
+      await findOrCreateUser(interaction.user);
+      logger.info(
+        `${interaction.user.username} (/) ${interaction.commandName}`
+      );
       await command.execute(interaction);
     } catch (error) {
       console.error(error);
