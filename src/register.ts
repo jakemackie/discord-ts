@@ -1,11 +1,11 @@
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
-import { 
-  REST, 
+import {
+  REST,
   Routes,
   type ApplicationCommandData,
-  type ApplicationCommandDataResolvable, 
+  type ApplicationCommandDataResolvable
 } from 'discord.js';
 
 dotenv.config();
@@ -19,36 +19,38 @@ const commands: ApplicationCommandDataResolvable[] = [];
 const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
-(async () => {
-  for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
-    
-    for (const file of commandFiles) {
-      const filePath = path.join(commandsPath, file);
-      const command = (await import(filePath)).default;
-      if (command?.data && command?.execute) {
-        commands.push(command.data.toJSON());
-      } else {
-        console.log(
-          `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
-        );
-      }
-    }
-  }
-})();
-
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(token);
 
-// and deploy your commands!
-(async () => {
+// Load and deploy commands
+async function deployCommands() {
   try {
+    // Load commands
+    for (const folder of commandFolders) {
+      const commandsPath = path.join(foldersPath, folder);
+      const commandFiles = fs
+        .readdirSync(commandsPath)
+        .filter((file) => file.endsWith('.js'));
+
+      for (const file of commandFiles) {
+        const filePath = path.join(commandsPath, file);
+        console.log(filePath);
+        const command = (await import(filePath)).default;
+        if (command?.data && command?.execute) {
+          commands.push(command.data.toJSON());
+        } else {
+          console.log(
+            `[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`
+          );
+        }
+      }
+    }
+
     console.log(
       `Started refreshing ${commands.length} application (/) commands.`
     );
 
-    // The put method is used to fully refresh all commands in the guild with the current set
+    // Deploy commands
     const data = (await rest.put(
       Routes.applicationGuildCommands(clientId, guildId),
       { body: commands }
@@ -58,10 +60,12 @@ const rest = new REST().setToken(token);
       `Successfully reloaded ${data.length} application (/) commands.`
     );
   } catch (error) {
-    // And of course, make sure you catch and log any errors!
     console.error(error);
   }
-})();
+}
+
+// Execute the deployment
+deployCommands();
 
 // or delete command(s)
 
@@ -80,9 +84,10 @@ const rest = new REST().setToken(token);
 // all
 
 // for guild-based commands
-// rest.put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
-// 	.then(() => console.log('Successfully deleted all guild commands.'))
-// 	.catch(console.error);
+// rest
+//   .put(Routes.applicationGuildCommands(clientId, guildId), { body: [] })
+//   .then(() => console.log('Successfully deleted all guild commands.'))
+//   .catch(console.error);
 
 // for global commands
 // rest.put(Routes.applicationCommands(clientId), { body: [] })
