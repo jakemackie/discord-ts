@@ -32,12 +32,12 @@ export default {
     ];
 
     try {
-      const newCommand = require(
+      const newCommand = (await import(
         `../${command.category}/${command.data.name}.js`
-      ).default;
+      )).default;
       (interaction.client as ExtendedClient).commands.set(
-        newCommand.data.name,
-        newCommand
+        newCommand.default.data.name,
+        newCommand.default
       );
       await interaction.reply(
         `Command \`${newCommand.data.name}\` was reloaded!`

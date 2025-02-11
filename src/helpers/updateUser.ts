@@ -3,7 +3,7 @@ import type { User } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
 
 export const updateUser = async (user: DiscordUser): Promise<User | false> => {
-  let userInDatabase = await prisma.user.findUnique({
+  const userInDatabase = await prisma.user.findUnique({
     where: {
       discordId: user.id
     }
