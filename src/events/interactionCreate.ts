@@ -32,10 +32,11 @@ export default {
       const user = await findOrCreateUser(interaction.user);
 
       if (user) {
-        const updatedUser = await updateUser(interaction.user);
-        if (updatedUser) {
+        const userUpdated = await updateUser(interaction.user);
+
+        if (userUpdated) {
           logger.info(
-            `Updated user: ${updatedUser.discordUsername} (${updatedUser.id})`
+            `Updated user: ${userUpdated.id} (${userUpdated.discordUsername})`
           );
         }
       }
