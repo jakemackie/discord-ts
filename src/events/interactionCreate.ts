@@ -1,6 +1,7 @@
 import { Events, Interaction, MessageFlags } from 'discord.js';
 import { ExtendedClient } from '../structures/Client';
 import { findOrCreateUser } from '../helpers/findOrCreateUser';
+import { updateUser } from '../helpers/updateUser';
 import winston from 'winston';
 
 const logger = winston.createLogger({
@@ -28,10 +29,21 @@ export default {
     }
 
     try {
-      await findOrCreateUser(interaction.user);
+      const user = await findOrCreateUser(interaction.user);
+
+      if (user) {
+        const updatedUser = await updateUser(interaction.user);
+        if (updatedUser) {
+          logger.info(
+            `Updated user: ${updatedUser.discordUsername} (${updatedUser.id})`
+          );
+        }
+      }
+
       logger.info(
         `${interaction.user.username} (/) ${interaction.commandName}`
       );
+
       await command.execute(interaction);
     } catch (error) {
       console.error(error);
