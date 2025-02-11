@@ -1,6 +1,6 @@
 import { Events, Interaction, MessageFlags } from 'discord.js';
-import { ExtendedClient } from '../index';
-import { findOrCreateUser } from '../functions/findOrCreateUser';
+import { ExtendedClient } from '../structures/Client';
+import { findOrCreateUser } from '../helpers/findOrCreateUser';
 import winston from 'winston';
 
 const logger = winston.createLogger({
