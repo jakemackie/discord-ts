@@ -1,0 +1,17 @@
+* text=auto eol=lf
+*.md text diff=markdown
+*.ts text
+*.js text
+*.json text
+*.yml text
+*.yaml text
+*.toml text
+*.prisma text
+*.env* text
+.prettierrc text
+.eslintrc text
+
+# Exclude npm lock files from GitHub language statistics
+package-lock.json linguist-generated
+yarn.lock linguist-generated
+pnpm-lock.yaml linguist-generated
