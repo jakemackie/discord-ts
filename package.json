@@ -9,7 +9,8 @@
     "deploy": "node dist/src/register.js --global",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.3",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
     "prettier": "3.5.0",
     "prisma": "^6.3.1",
     "typescript-eslint": "^8.24.0"
