@@ -26,17 +26,16 @@ export default {
     }
 
     const song = listeningToSpotify.details;
-    const trackId = listeningToSpotify.syncId;
-    const url = trackId
-      ? getSpotifySongUrl(trackId, listeningToSpotify.party?.id ?? '')
-      : null;
     const artist = listeningToSpotify.state?.replaceAll(';', ', ');
+    const trackId = listeningToSpotify.syncId;
 
-    let description = `**${song}**\n-# ${artist}`;
+    const url = trackId && listeningToSpotify.party?.id
+      ? getSpotifySongUrl(trackId, listeningToSpotify.party.id)
+      : null;
 
-    if (url) {
-      description = `**[${song}](${url})**\n-# ${artist}`;
-    }
+    const description = url
+      ? `**[${song}](${url})**\n-# ${artist}`
+      : `**${song}**\n-# ${artist}`;
 
     const spotifyEmbed = new EmbedBuilder()
       .setColor('#1DB954')
