@@ -2,15 +2,9 @@ import { Events, Interaction, MessageFlags } from 'discord.js';
 import { ExtendedClient } from '../structures/Client';
 import { findOrCreateUser } from '../helpers/findOrCreateUser';
 import { updateUser } from '../helpers/updateUser';
-import winston from 'winston';
-
-const logger = winston.createLogger({
-	level: 'info',
-	format: winston.format.printf(({ level, message }) => {
-		return `[${new Date().toISOString()}] [${level.toUpperCase()}]: ${message}`;
-	}),
-	transports: [new winston.transports.Console()]
-});
+import { findOrCreateGuild } from '../helpers/findOrCreateGuild';
+import { updateGuild } from '../helpers/updateGuild';
+import { logger } from '../logger';
 
 // Define the Discord API Error type
 interface DiscordAPIError extends Error {
@@ -46,6 +40,18 @@ export default {
 
 				if (userUpdated) {
 					logger.info(`Updated user: ${userUpdated.id} (${userUpdated.discordUsername})`);
+				}
+			}
+
+			if (interaction.guild) {
+				const guild = await findOrCreateGuild(interaction.guild);
+
+				if (guild) {
+					const guildUpdated = await updateGuild(interaction.guild);
+
+					if (guildUpdated) {
+						logger.info(`Updated guild: ${guildUpdated.id} (${guildUpdated.name})`);
+					}
 				}
 			}
 
