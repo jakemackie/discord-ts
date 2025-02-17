@@ -1,9 +1,11 @@
 model Guild {
   id String @id @default(uuid())
 
+  // discord info
   discordId String @unique
   name String
 
+  // premium info
   guildType GuildType @default(FREE)
 
   createdAt DateTime @default(now())
