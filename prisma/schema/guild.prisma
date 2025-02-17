@@ -1,7 +1,17 @@
 model Guild {
   id String @id @default(uuid())
+
   discordId String @unique
   name String
+
+  guildType GuildType @default(FREE)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum GuildType {
+  FREE
+  MONTHLY
+  LIFETIME
 }

@@ -1,8 +1,19 @@
 model User {
   id String @id @default(uuid())
+
+  // discord info
   discordId String @unique
   discordUsername String @unique
   discordDisplayName String
+
+  // premium info
+  userType UserType @default(FREE)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum UserType {
+  FREE
+  LIFETIME
 }
