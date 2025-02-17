@@ -13,10 +13,15 @@ export const findOrCreateGuild = async (guild: DiscordGuild): Promise<Guild> => 
 		return guildInDatabase;
 	}
 
+	const owner = await guild.fetchOwner();
+
 	guildInDatabase = await prisma.guild.create({
 		data: {
 			discordId: guild.id,
-			name: guild.name
+			name: guild.name,
+			ownerId: owner.id,
+			ownerUsername: owner.user.username,
+			ownerDisplayName: owner.displayName
 		}
 	});
 
