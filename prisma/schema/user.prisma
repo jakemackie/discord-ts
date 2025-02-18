@@ -10,6 +10,7 @@ model User {
   updatedAt          DateTime @updatedAt
   userType           UserType @default(FREE)
   lastfmUsername     String?
+  lastfmSessionKey   String?
 }
 
 enum UserType {
