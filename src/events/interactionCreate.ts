@@ -35,12 +35,21 @@ export default {
 		try {
 			const user = await findOrCreateUser(interaction.user);
 
-			if (user) {
+			if (user && !user.banned) {
 				const userUpdated = await updateUser(interaction.user);
 
 				if (userUpdated) {
 					logger.info(`Updated user: ${userUpdated.id} (${userUpdated.discordUsername})`);
 				}
+			} else {
+				logger.info(
+					`${interaction.user.username} (${interaction.user.id}) tried to use (/) ${interaction.commandName} but is banned.`
+				);
+
+				return await interaction.reply({
+					content: `You have been restricted from using this bot for: ${user?.bannedReason}`,
+					flags: MessageFlags.Ephemeral
+				});
 			}
 
 			if (interaction.guild) {

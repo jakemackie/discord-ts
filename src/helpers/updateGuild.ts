@@ -1,8 +1,9 @@
 import type { Guild as DiscordGuild } from 'discord.js';
 import type { Guild } from '@prisma/client';
 import { prisma } from '../../lib/prisma';
+import { logger } from '../logger';
 
-export const updateGuild = async (guild: DiscordGuild): Promise<Guild | false> => {
+export const updateGuild = async (guild: DiscordGuild, inactive = false): Promise<Guild | false> => {
 	const guildInDatabase = await prisma.guild.findUnique({
 		where: {
 			discordId: guild.id
@@ -16,8 +17,13 @@ export const updateGuild = async (guild: DiscordGuild): Promise<Guild | false> =
 	const updateData: Partial<Guild> = {};
 
 	if (guild.name !== guildInDatabase.name) {
-		console.log(`Updating name for ${guild.name}`);
+		logger.info(`Updating name for ${guild.name}`);
 		updateData.name = guild.name;
+	}
+
+	if (inactive) {
+		guildInDatabase.status = 'INACTIVE';
+		logger.info(`Setting ${guild.name} (${guildInDatabase.id}) to inactive`);
 	}
 
 	if (Object.keys(updateData).length > 0) {

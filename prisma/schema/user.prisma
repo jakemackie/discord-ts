@@ -1,16 +1,15 @@
 model User {
-  id String @id @default(uuid())
-
-  // discord info
-  discordId String @unique
-  discordUsername String @unique
+  id                 String   @id @default(uuid())
+  banned             Boolean  @default(false)
+  bannedSince        DateTime?
+  bannedReason       String?
+  discordId          String   @unique
+  discordUsername    String   @unique
   discordDisplayName String
-
-  // premium info
-  userType UserType @default(FREE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  userType           UserType @default(FREE)
+  lastfmUsername     String?
 }
 
 enum UserType {

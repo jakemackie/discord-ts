@@ -1,19 +1,23 @@
 model Guild {
-  id String @id @default(uuid())
-
-  // discord info
-  discordId String @unique
-  name String
-
-  // premium info
-  guildType GuildType @default(FREE)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String    @id @default(uuid())
+  discordId        String    @unique
+  name             String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  guildType        GuildType @default(FREE)
+  ownerDisplayName String
+  ownerId          String
+  ownerUsername    String
+  status           GuildStatus @default(ACTIVE)
 }
 
 enum GuildType {
   FREE
   MONTHLY
   LIFETIME
+}
+
+enum GuildStatus {
+  ACTIVE
+  INACTIVE
 }
