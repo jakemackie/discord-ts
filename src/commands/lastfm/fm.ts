@@ -22,7 +22,7 @@ export default {
 
 		const authUrl = `http://www.last.fm/api/auth/?api_key=${process.env.LASTFM_API_KEY}`;
 
-		let embed = new EmbedBuilder()
+		const embed = new EmbedBuilder()
 			.setAuthor({
 				name: interaction.user.username,
 				iconURL: interaction.user.displayAvatarURL()
@@ -34,7 +34,7 @@ export default {
 		);
 
 		if (user && !user.lastfmUsername) {
-			let description = `${interaction.user.username} has not linked their [Last.fm](https://last.fm) account yet. Click the button below to get started.`;
+			const description = `${interaction.user.username} has not linked their [Last.fm](https://last.fm) account yet. Click the button below to get started.`;
 
 			embed.setDescription(description);
 
@@ -44,7 +44,7 @@ export default {
 				flags: MessageFlags.Ephemeral
 			});
 		} else if (user && user.lastfmUsername) {
-			let description = `${interaction.user.username} you are already logged in to Last.fm as **${user.lastfmUsername}**. If you meant to do this, you can sign into another account by using the button below.`;
+			const description = `${interaction.user.username} you are already logged in to Last.fm as **${user.lastfmUsername}**. If you meant to do this, you can sign into another account by using the button below.`;
 
 			embed.setDescription(description);
 
